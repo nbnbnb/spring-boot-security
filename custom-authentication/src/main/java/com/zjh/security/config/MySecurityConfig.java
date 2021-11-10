@@ -17,13 +17,15 @@ public class MySecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private MyAuthenticationSucessHandler authenticationSucessHandler;
+
     @Autowired
     private MyAuthenticationFailureHandler authenticationFailureHandler;
 
     @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder(){
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.formLogin() // 表单登录
@@ -39,4 +41,5 @@ public class MySecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticated() // 都需要认证
                 .and().csrf().disable();
     }
+
 }
