@@ -20,36 +20,27 @@ import org.springframework.stereotype.Component;
 import javax.sql.DataSource;
 
 @Component
-@EnableGlobalMethodSecurity(prePostEnabled = true) // 开启权限注解
+// 开启权限注解
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class MySecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final MyAuthenticationFailureHandler authenticationFailureHandler;
+    @Autowired
+    private MyAuthenticationFailureHandler authenticationFailureHandler;
 
-    private final MyAuthenticationSuccessHandler authenticationSuccessHandler;
+    @Autowired
+    private MyAuthenticationSuccessHandler authenticationSuccessHandler;
 
-    private final ValidateCodeFilter validateCodeFilter;
+    @Autowired
+    private ValidateCodeFilter validateCodeFilter;
 
-    private final UserDetailService userDetailService;
+    @Autowired
+    private UserDetailService userDetailService;
 
-    private final DataSource dataSource;
+    @Autowired
+    private DataSource dataSource;
 
-    private final MyAuthenticationAccessDeniedHandler myAuthenticationAccessDeniedHandler;
-
-    public MySecurityConfig(MyAuthenticationFailureHandler authenticationFailureHandler,
-                            MyAuthenticationSuccessHandler authenticationSuccessHandler,
-                            ValidateCodeFilter validateCodeFilter,
-                            UserDetailService userDetailService,
-                            DataSource dataSource,
-                            MyAuthenticationAccessDeniedHandler myAuthenticationAccessDeniedHandler) {
-
-        this.authenticationFailureHandler = authenticationFailureHandler;
-        this.authenticationSuccessHandler = authenticationSuccessHandler;
-        this.validateCodeFilter = validateCodeFilter;
-        this.userDetailService = userDetailService;
-        this.dataSource = dataSource;
-        this.myAuthenticationAccessDeniedHandler = myAuthenticationAccessDeniedHandler;
-
-    }
+    @Autowired
+    private MyAuthenticationAccessDeniedHandler myAuthenticationAccessDeniedHandler;
 
 
     public PersistentTokenRepository persistentTokenRepository() {
