@@ -6,6 +6,7 @@ import com.zjh.security.handler.MyAuthenticationAccessDeniedHandler;
 import com.zjh.security.handler.MyAuthenticationFailureHandler;
 import com.zjh.security.handler.MyAuthenticationSuccessHandler;
 import com.zjh.security.service.UserDetailService;
+import jdk.jfr.Label;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -43,10 +44,14 @@ public class MySecurityConfig extends WebSecurityConfigurerAdapter {
     private MyAuthenticationAccessDeniedHandler myAuthenticationAccessDeniedHandler;
 
 
+    // 需要 persistent_logins 表
+    @Bean
     public PersistentTokenRepository persistentTokenRepository() {
         JdbcTokenRepositoryImpl jdbcTokenRepository = new JdbcTokenRepositoryImpl();
         jdbcTokenRepository.setDataSource(dataSource);
-        jdbcTokenRepository.setCreateTableOnStartup(false);
+        // 是否在启动时重建表，调试时使用
+        // 查看源码，里面有对应的 SQL 建表语句
+        jdbcTokenRepository.setCreateTableOnStartup(true);
         return jdbcTokenRepository;
     }
 
