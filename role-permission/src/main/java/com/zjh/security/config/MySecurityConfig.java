@@ -66,21 +66,40 @@ public class MySecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.addFilterBefore(validateCodeFilter, UsernamePasswordAuthenticationFilter.class) // 添加验证码校验过滤器
+
+        http
+                // 在 UsernamePasswordAuthenticationFilter 执行前
+                // 添加自定义的 ValidateCodeFilter 验证码 Filter
+                .addFilterBefore(validateCodeFilter, UsernamePasswordAuthenticationFilter.class)
+                // 使用默认的异常处理器
                 .exceptionHandling()
+                // 使用自定义的拒绝访问处理器
                 .accessDeniedHandler(myAuthenticationAccessDeniedHandler)
                 .and()
-                .formLogin() // 表单登录
-                // http.httpBasic() // HTTP Basic
-                .loginPage("/authentication/require") // 登录跳转 URL
-                .loginProcessingUrl("/login") // 处理表单登录 URL
-                .failureHandler(authenticationFailureHandler) // 处理登录失败
-                .successHandler(authenticationSuccessHandler) // 登录成功
+                // 设置登录类型
+                // 表单登录
+                .formLogin()
+                // HTTP Basic 登录
+                // http.httpBasic()
+                //
+                // 设置登录跳转 URL
+                .loginPage("/login.html")
+                // 处理表单登录 URL，也就是登录 POST 的 URL
+                .loginProcessingUrl("/login")
+                // 登录失败处理器（响应错误代码）
+                .failureHandler(authenticationFailureHandler)
+                // 登录成功处理器（跳转到首页）
+                .successHandler(authenticationSuccessHandler)
                 .and()
-                .rememberMe() // 启用 rememberMe
-                .tokenRepository(persistentTokenRepository()) // 配置 token 持久化仓库
-                .tokenValiditySeconds(3600) // remember 过期时间，单为秒
-                .userDetailsService(userDetailService) // 处理自动登录逻辑
+                // 杂项功能
+                // 启用 rememberMe
+                .rememberMe()
+                // 配置 token 持久化仓库
+                .tokenRepository(persistentTokenRepository())
+                // remember 过期时间，单为秒
+                .tokenValiditySeconds(3600)
+                // 处理自动登录逻辑
+                .userDetailsService(userDetailService)
                 .and()
                 // 下面对页面进行配置授权
                 .authorizeRequests()
