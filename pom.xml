@@ -13,11 +13,7 @@
     <name>Parent POM</name>
 
     <modules>
-        <module>custom-authentication</module>
-        <module>graphic-captcha</module>
-        <module>logout</module>
-        <module>remember-me</module>
-        <module>role-permission</module>
+        <module>security-in-one</module>
         <module>security-basic</module>
     </modules>
 
