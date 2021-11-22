@@ -16,7 +16,7 @@ public class IndexController {
     @GetMapping("/auth/admin")
     @PreAuthorize("hasAuthority('admin')")
     public String authenticationTest() {
-        return "您拥有admin权限，可以查看";
+        return "您拥有 admin 权限，可以查看";
     }
 
 }

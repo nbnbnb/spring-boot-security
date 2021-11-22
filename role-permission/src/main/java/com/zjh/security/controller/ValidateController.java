@@ -20,13 +20,15 @@ public class ValidateController {
 
     public final static String SESSION_KEY = "SESSION_KEY_IMAGE_CODE";
 
+    // 使用 HttpSessionSessionStrategy 保存 Session 信息
     private final SessionStrategy sessionStrategy = new HttpSessionSessionStrategy();
-
 
     @GetMapping("/code/image")
     public void createCode(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         ImageCode imageCode = createImageCode();
+        // 将验证码信息存储在 Session 中
+        // 在 ValidateCodeFilter 中对此 Code 进行验证
         sessionStrategy.setAttribute(new ServletWebRequest(request), SESSION_KEY, imageCode);
         ImageIO.write(imageCode.getImage(), "jpeg", response.getOutputStream());
 

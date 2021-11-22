@@ -12,22 +12,16 @@ import java.io.IOException;
 
 @Component
 public class MyAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
-   /* @Autowired
-    private ObjectMapper mapper;
+
+    private final RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
+
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-                                        Authentication authentication) throws IOException, ServletException {
-        response.setContentType("application/json;charset=utf-8");
-        // 将认证信息转换成jsonString写入response
-        response.getWriter().write(mapper.writeValueAsString(authentication));
-    }*/
+    public void onAuthenticationSuccess(HttpServletRequest request,
+                                        HttpServletResponse response,
+                                        Authentication authentication) throws IOException {
 
-       private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
-
-       @Override
-       public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-                                           Authentication authentication) throws IOException {
-           redirectStrategy.sendRedirect(request, response, "/index");
-       }
+        // 登录成功，跳转到 /index
+        redirectStrategy.sendRedirect(request, response, "/index");
+    }
 
 }

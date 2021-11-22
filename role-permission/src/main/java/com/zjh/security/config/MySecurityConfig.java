@@ -75,19 +75,21 @@ public class MySecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginPage("/authentication/require") // 登录跳转 URL
                 .loginProcessingUrl("/login") // 处理表单登录 URL
                 .failureHandler(authenticationFailureHandler) // 处理登录失败
-                .successHandler(authenticationSuccessHandler)
+                .successHandler(authenticationSuccessHandler) // 登录成功
                 .and()
-                .rememberMe() // 启用rememberMe
+                .rememberMe() // 启用 rememberMe
                 .tokenRepository(persistentTokenRepository()) // 配置 token 持久化仓库
                 .tokenValiditySeconds(3600) // remember 过期时间，单为秒
                 .userDetailsService(userDetailService) // 处理自动登录逻辑
                 .and()
-                .authorizeRequests() // 授权配置
-                .antMatchers("/authentication/require",
-                        "/login.html",
-                        "/code/image").permitAll() // 无需认证的请求路径
-                .anyRequest()  // 所有请求
-                .authenticated() // 都需要认证
-                .and().csrf().disable();
+                // 下面对页面进行配置授权
+                .authorizeRequests()
+                // 特定 URL，无需认证
+                .antMatchers("/authentication/require", "/login.html", "/code/image").permitAll()
+                // 所有请求，都需要认证
+                .anyRequest().authenticated()
+                .and()
+                // 禁用 CSRF
+                .csrf().disable();
     }
 }

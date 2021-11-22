@@ -35,6 +35,7 @@ public class ValidateCodeFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
                                     FilterChain filterChain) throws ServletException, IOException {
 
+        // login.html post 的就说 /login 页面
         if (StringUtils.equalsIgnoreCase("/login", httpServletRequest.getRequestURI())
                 && StringUtils.equalsIgnoreCase(httpServletRequest.getMethod(), "post")) {
             try {
@@ -44,10 +45,13 @@ public class ValidateCodeFilter extends OncePerRequestFilter {
                 return;
             }
         }
+
+
         filterChain.doFilter(httpServletRequest, httpServletResponse);
     }
 
     private void validateCode(ServletWebRequest servletWebRequest) throws ServletRequestBindingException {
+
         ImageCode codeInSession = (ImageCode) sessionStrategy.getAttribute(servletWebRequest, ValidateController.SESSION_KEY);
         String codeInRequest = ServletRequestUtils.getStringParameter(servletWebRequest.getRequest(), "imageCode");
 
@@ -57,13 +61,18 @@ public class ValidateCodeFilter extends OncePerRequestFilter {
         if (codeInSession == null) {
             throw new ValidateCodeException("验证码不存在！");
         }
+
         if (codeInSession.isExpire()) {
             sessionStrategy.removeAttribute(servletWebRequest, ValidateController.SESSION_KEY);
             throw new ValidateCodeException("验证码已过期！");
         }
+
         if (!StringUtils.equalsIgnoreCase(codeInSession.getCode(), codeInRequest)) {
             throw new ValidateCodeException("验证码不正确！");
         }
+
+        // 验证成功之后
+        // 移除 Session 中的验证码
         sessionStrategy.removeAttribute(servletWebRequest, ValidateController.SESSION_KEY);
 
     }

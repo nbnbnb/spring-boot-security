@@ -14,14 +14,19 @@ import java.io.IOException;
 @Component
 public class MyAuthenticationFailureHandler implements AuthenticationFailureHandler {
 
-    @Autowired
-    private ObjectMapper mapper;
+    private final ObjectMapper mapper;
+
+    public MyAuthenticationFailureHandler(ObjectMapper mapper) {
+        this.mapper = mapper;
+    }
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
                                         AuthenticationException exception) throws IOException {
+
         response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
         response.setContentType("application/json;charset=utf-8");
         response.getWriter().write(mapper.writeValueAsString(exception.getMessage()));
+
     }
 }
