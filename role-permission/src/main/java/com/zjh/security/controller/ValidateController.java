@@ -23,9 +23,9 @@ public class ValidateController {
     private final SessionStrategy sessionStrategy = new HttpSessionSessionStrategy();
 
 
-
     @GetMapping("/code/image")
     public void createCode(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
         ImageCode imageCode = createImageCode();
         sessionStrategy.setAttribute(new ServletWebRequest(request), SESSION_KEY, imageCode);
         ImageIO.write(imageCode.getImage(), "jpeg", response.getOutputStream());
@@ -81,4 +81,5 @@ public class ValidateController {
         int b = fc + random.nextInt(bc - fc);
         return new Color(r, g, b);
     }
+
 }

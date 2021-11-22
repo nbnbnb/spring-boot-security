@@ -23,10 +23,13 @@ import java.io.IOException;
 @Component
 public class ValidateCodeFilter extends OncePerRequestFilter {
 
-    @Autowired
-    private AuthenticationFailureHandler authenticationFailureHandler;
+    private final AuthenticationFailureHandler authenticationFailureHandler;
 
-    private SessionStrategy sessionStrategy = new HttpSessionSessionStrategy();
+    private final SessionStrategy sessionStrategy = new HttpSessionSessionStrategy();
+
+    public ValidateCodeFilter(AuthenticationFailureHandler authenticationFailureHandler) {
+        this.authenticationFailureHandler = authenticationFailureHandler;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
@@ -43,6 +46,7 @@ public class ValidateCodeFilter extends OncePerRequestFilter {
         }
         filterChain.doFilter(httpServletRequest, httpServletResponse);
     }
+
     private void validateCode(ServletWebRequest servletWebRequest) throws ServletRequestBindingException {
         ImageCode codeInSession = (ImageCode) sessionStrategy.getAttribute(servletWebRequest, ValidateController.SESSION_KEY);
         String codeInRequest = ServletRequestUtils.getStringParameter(servletWebRequest.getRequest(), "imageCode");

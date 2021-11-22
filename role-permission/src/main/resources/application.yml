@@ -2,7 +2,6 @@ server:
   port: 8005
 spring:
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/security?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
-    username: root
-    password: 123456
+    url: jdbc:mysql://seoul-arm.zhangjin.tk:13306/boot?useUnicode=true&autoReconnect=true&rewriteBatchedStatements=TRUE&useSSL=false
+    username: boot
+    password: boot

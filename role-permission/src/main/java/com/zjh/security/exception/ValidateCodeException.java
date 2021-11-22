@@ -7,4 +7,5 @@ public class ValidateCodeException extends AuthenticationException {
     public ValidateCodeException(String message) {
         super(message);
     }
+
 }

@@ -19,25 +19,38 @@ import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
 
-/**
- * @author zjh on 2020/7/5
- */
 @Component
 @EnableGlobalMethodSecurity(prePostEnabled = true) // 开启权限注解
 public class MySecurityConfig extends WebSecurityConfigurerAdapter {
-    @Autowired
-    private MyAuthenticationFailureHandler authenticationFailureHandler;
 
-    @Autowired
-    private MyAuthenticationSuccessHandler authenticationSuccessHandler;
-    @Autowired
-    private ValidateCodeFilter validateCodeFilter;
-    @Autowired
-    private UserDetailService userDetailService;
-    @Autowired
-    private DataSource dataSource;
-    @Autowired
-    private MyAuthenticationAccessDeniedHandler myAuthenticationAccessDeniedHandler;
+    private final MyAuthenticationFailureHandler authenticationFailureHandler;
+
+    private final MyAuthenticationSuccessHandler authenticationSuccessHandler;
+
+    private final ValidateCodeFilter validateCodeFilter;
+
+    private final UserDetailService userDetailService;
+
+    private final DataSource dataSource;
+
+    private final MyAuthenticationAccessDeniedHandler myAuthenticationAccessDeniedHandler;
+
+    public MySecurityConfig(MyAuthenticationFailureHandler authenticationFailureHandler,
+                            MyAuthenticationSuccessHandler authenticationSuccessHandler,
+                            ValidateCodeFilter validateCodeFilter,
+                            UserDetailService userDetailService,
+                            DataSource dataSource,
+                            MyAuthenticationAccessDeniedHandler myAuthenticationAccessDeniedHandler) {
+
+        this.authenticationFailureHandler = authenticationFailureHandler;
+        this.authenticationSuccessHandler = authenticationSuccessHandler;
+        this.validateCodeFilter = validateCodeFilter;
+        this.userDetailService = userDetailService;
+        this.dataSource = dataSource;
+        this.myAuthenticationAccessDeniedHandler = myAuthenticationAccessDeniedHandler;
+
+    }
+
 
     public PersistentTokenRepository persistentTokenRepository() {
         JdbcTokenRepositoryImpl jdbcTokenRepository = new JdbcTokenRepositoryImpl();
@@ -45,27 +58,29 @@ public class MySecurityConfig extends WebSecurityConfigurerAdapter {
         jdbcTokenRepository.setCreateTableOnStartup(false);
         return jdbcTokenRepository;
     }
+
     @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder(){
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-         http.addFilterBefore(validateCodeFilter, UsernamePasswordAuthenticationFilter.class) // 添加验证码校验过滤器
-                 .exceptionHandling()
-                 .accessDeniedHandler(myAuthenticationAccessDeniedHandler)
-                 .and()
-                 .formLogin() // 表单登录
+        http.addFilterBefore(validateCodeFilter, UsernamePasswordAuthenticationFilter.class) // 添加验证码校验过滤器
+                .exceptionHandling()
+                .accessDeniedHandler(myAuthenticationAccessDeniedHandler)
+                .and()
+                .formLogin() // 表单登录
                 // http.httpBasic() // HTTP Basic
                 .loginPage("/authentication/require") // 登录跳转 URL
                 .loginProcessingUrl("/login") // 处理表单登录 URL
                 .failureHandler(authenticationFailureHandler) // 处理登录失败
                 .successHandler(authenticationSuccessHandler)
-                 .and()
-                 .rememberMe() // 启用rememberMe
-                 .tokenRepository(persistentTokenRepository()) // 配置 token 持久化仓库
-                 .tokenValiditySeconds(3600) // remember 过期时间，单为秒
-                 .userDetailsService(userDetailService) // 处理自动登录逻辑
+                .and()
+                .rememberMe() // 启用rememberMe
+                .tokenRepository(persistentTokenRepository()) // 配置 token 持久化仓库
+                .tokenValiditySeconds(3600) // remember 过期时间，单为秒
+                .userDetailsService(userDetailService) // 处理自动登录逻辑
                 .and()
                 .authorizeRequests() // 授权配置
                 .antMatchers("/authentication/require",

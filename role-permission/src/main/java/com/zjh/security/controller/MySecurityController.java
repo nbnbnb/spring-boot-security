@@ -17,22 +17,25 @@ import java.io.IOException;
 
 @RestController
 public class MySecurityController {
-	//RequestCache requestCache是Spring Security提供的用于缓存请求的对象
-    private RequestCache requestCache = new HttpSessionRequestCache();
-	//DefaultRedirectStrategy是Spring Security提供的重定向策略
-    private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
+
+    // RequestCache requestCache是Spring Security 提供的用于缓存请求的对象
+    private final RequestCache requestCache = new HttpSessionRequestCache();
+
+    // DefaultRedirectStrategy是Spring Security 提供的重定向策略
+    private final RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
     @GetMapping("/authentication/require")
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public String requireAuthentication(HttpServletRequest request, HttpServletResponse response) throws IOException {
-				//getRequest方法可以获取到本次请求的HTTP信息
+        //getRequest方法可以获取到本次请求的HTTP信息
         SavedRequest savedRequest = requestCache.getRequest(request, response);
         if (savedRequest != null) {
             String targetUrl = savedRequest.getRedirectUrl();
             if (StringUtils.endsWithIgnoreCase(targetUrl, ".html"))
-							//sendRedirect为Spring Security提供的用于处理重定向的方法
+                //sendRedirect为Spring Security提供的用于处理重定向的方法
                 redirectStrategy.sendRedirect(request, response, "/login.html");
         }
         return "访问的资源需要身份认证！";
     }
+
 }
