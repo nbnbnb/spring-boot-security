@@ -21,14 +21,14 @@ public class MySecurityController {
     // RequestCache requestCache 是 Spring Security 提供的用于缓存请求的对象
     private final RequestCache requestCache = new HttpSessionRequestCache();
 
-    // DefaultRedirectStrateg y是 Spring Security 提供的重定向策略
+    // DefaultRedirectStrategy 是 Spring Security 提供的重定向策略
     private final RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
     @GetMapping("/authentication/require")
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public String requireAuthentication(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        // getRequest 方法可以获取到本次请求的HTTP信息
+        // getRequest 方法可以获取到本次请求的 HTTP 信息
         SavedRequest savedRequest = requestCache.getRequest(request, response);
 
         if (savedRequest != null) {
